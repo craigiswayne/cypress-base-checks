@@ -1,0 +1,68 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script id="handle-bars-template" type="template">
+        {{#each items}}
+        <details>
+            <summary>Path: {{path}} | Viewport: {{viewport}}</summary>
+            <div class="row">
+                <div class="column">
+                    <img src="{{original}}" />
+                </div>
+                <div class="column">
+                    <img src="{{current}}" />
+                </div>
+            </div>
+        </details>
+        {{/each}}
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const template = Handlebars.compile(document.getElementById('handle-bars-template').innerHTML);
+            const paths = [
+                // 'sustainability-pledge',
+                'platform-systems'
+            ]
+            const viewports = [
+                {
+                    name: 'mobile',
+                    width: '428',
+                    height: '900'
+                },
+                {
+                    name: 'desktop',
+                    width: '1920',
+                    height: '1080'
+                }
+            ];
+            const context = {
+                items: paths.reduce( (acc, path) => {
+                    viewports.forEach( v => {
+                        acc.push({
+                            path: path,
+                            viewport: `${v.width}x${v.height}`,
+                            original: `../../screenshots/comparison.cy.js/${v.width}x${v.height}/${path}-www.microgaming.co.uk.png`,
+                            current: `../../screenshots/comparison.cy.js/${v.width}x${v.height}/${path}-localhost.png`,
+                        })
+                    })
+                    return acc
+                }, []),
+            }
+            document.getElementById('result').innerHTML = template(context);
+        });
+    </script>
+    <style>
+        img {
+            max-width: 100%;
+        }
+        .row {
+            display: flex
+        }
+        .column {
+
+        }
+    </style>
+</head>
+<body>
+    <div id="result"></div>
+</body>
